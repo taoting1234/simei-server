@@ -14,8 +14,8 @@ class User(UserMixin, Base):
     permission = Column(Integer, nullable=False)
 
 
-class FundAdd(Base):
-    __tablename__ = 'fund_add'
+class Fund(Base):
+    __tablename__ = 'fund'
 
     id = Column(Integer, primary_key=True)
     money = Column(Integer, nullable=False)
@@ -24,12 +24,13 @@ class FundAdd(Base):
     create_time = Column(DateTime, nullable=False)
 
 
-class FundUse(Base):
-    __tablename__ = 'fund_use'
+class Application(Base):
+    __tablename__ = 'application'
 
     id = Column(Integer, primary_key=True)
     name = Column(String(100), nullable=False)
     money = Column(Integer, nullable=False)
+    remark = Column(String(100), nullable=False)
     apply_user_id = Column(String(100), ForeignKey('user.id'))
     apply_user = relationship("app.models.entity.User", foreign_keys=[apply_user_id])
     apply_time = Column(DateTime, nullable=False)
