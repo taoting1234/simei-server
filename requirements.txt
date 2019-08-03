@@ -1,0 +1,8 @@
+eventlet
+Flask
+Flask-Cors
+Flask-Login
+Flask-SQLAlchemy
+PyMySQL
+WTForms
+gunicorn
