@@ -28,9 +28,21 @@ def apply_api():
 
 @api.route("/get_apply_list", methods=['POST'])
 @login_required
-def get_apply_list_pi():
+def get_apply_list_api():
     form = UserIdForm().validate_for_api()
     res = get_apply_list_by_user_id(form.user_id.data)
+    return jsonify({
+        'code': 0,
+        'data': res
+    })
+
+
+@api.route("/admin_get_apply_list", methods=['POST'])
+@login_required
+def admin_get_apply_list_api():
+    if not current_user.permission:
+        raise Forbidden('Only administrators can operate')
+    res = get_apply_list_by_user_id()
     return jsonify({
         'code': 0,
         'data': res

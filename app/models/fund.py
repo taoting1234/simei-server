@@ -1,5 +1,7 @@
 import datetime
 
+from sqlalchemy import desc
+
 from app.models.base import db
 from app.models.entity import Fund, Application
 
@@ -25,7 +27,12 @@ def apply(user_id, name, money, remark):
         db.session.add(r)
 
 
-def get_apply_list_by_user_id(user_id):
+def get_apply_list_by_user_id(user_id=None):
+    if user_id:
+        r = Application.query.filter_by(apply_user_id=user_id).order_by(desc(Application.id)).all()
+    else:
+        r = Application.query.order_by(desc(Application.id)).all()
+
     return [{
         'id': i.id,
         'name': i.name,
@@ -38,4 +45,4 @@ def get_apply_list_by_user_id(user_id):
         'approval_user_nickname': i.approval_user.nickname if i.approval_user else None,
         'approval_time': i.approval_time,
         'status': i.status
-    } for i in Application.query.filter_by(apply_user_id=user_id).all()]
+    } for i in r]
