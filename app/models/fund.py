@@ -1,6 +1,6 @@
 import datetime
 
-from sqlalchemy import desc
+from sqlalchemy import desc, func
 
 from app.models.base import db
 from app.models.entity import Fund, Application
@@ -27,7 +27,7 @@ def apply(user_id, name, money, remark):
         db.session.add(r)
 
 
-def get_apply_list_by_user_id(user_id=None):
+def get_application_list_by_user_id(user_id=None):
     if user_id:
         r = Application.query.filter_by(apply_user_id=user_id).order_by(desc(Application.id)).all()
     else:
@@ -46,3 +46,32 @@ def get_apply_list_by_user_id(user_id=None):
         'approval_time': i.approval_time,
         'status': i.status
     } for i in r]
+
+
+def get_application_by_application_id(application_id):
+    return Application.query.get(application_id)
+
+
+def approval(application_id, user_id, status):
+    r = get_application_by_application_id(application_id)
+    with db.auto_commit():
+        r.approval_user_id = user_id
+        r.approval_time = datetime.datetime.now()
+        r.status = status
+
+
+def get_fund():
+    r1 = db.session.query(func.sum(Fund.money)).first()
+    if r1:
+        r1 = int(r1[0])
+    else:
+        r1 = 0
+    r2 = db.session.query(func.sum(Application.money)).filter(
+        Application.status == 1
+    ).first()
+    if r2:
+        r2 = int(r2[0])
+    else:
+        r2 = 0
+
+    return r1 - r2
