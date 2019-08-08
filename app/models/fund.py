@@ -78,4 +78,5 @@ def get_fund():
 
 
 def delete_application(application_id):
-    Application.query.filter_by(id=application_id).delete()
+    with db.auto_commit():
+        Application.query.filter_by(id=application_id).delete()
