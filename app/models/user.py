@@ -4,8 +4,8 @@ from app.models.base import db
 from app.models.entity import User
 
 
-def check_password(user, password):
-    return user.password == password
+def check_password(no_auth_password, auth_password):
+    return no_auth_password == auth_password
 
 
 def modify_password(user_id, password):
@@ -18,6 +18,24 @@ def modify_user(user_id, nickname):
     user = get_user_by_user_id(user_id)
     with db.auto_commit():
         user.nickname = nickname
+
+
+def add_user(user_id, nickname):
+    with db.auto_commit():
+        user = User()
+        user.id = user_id
+        user.nickname = nickname
+        user.password = user_id
+        user.permission = 0
+        db.session.add(user)
+
+
+def get_user_list():
+    return [{
+        'user_id': i.id,
+        'nickname': i.nickname,
+        'permission': i.permission
+    } for i in User.query.all()]
 
 
 @login_manager.user_loader

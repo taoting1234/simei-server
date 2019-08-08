@@ -75,3 +75,7 @@ def get_fund():
         r2 = 0
 
     return r1 - r2
+
+
+def delete_application(application_id):
+    Application.query.filter_by(id=application_id).delete()
