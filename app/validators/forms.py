@@ -48,8 +48,8 @@ class ApprovalForm(ApplicationIdForm):
     status = IntegerField(validators=[DataRequired(message='Status cannot be empty')])
 
     def validate_status(self, value):
-        if self.status.data != 1 and self.status.data != 2:
-            raise ValidationError('Status must be 1 or 2')
+        if self.status.data != 0 and self.status.data != 1:
+            raise ValidationError('Status must be 0 or 1')
 
 
 class AddUserForm(Form):

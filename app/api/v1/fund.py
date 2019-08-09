@@ -32,7 +32,7 @@ def apply_api():
 def delete_application_api():
     form = ApplicationIdForm().validate_for_api()
     application = get_application_by_application_id(form.application_id.data)
-    if application.status == 2:
+    if application.status == 1:
         raise Forbidden('Can\'t delete successful application')
     if not current_user.permission:
         if application.apply_user != current_user:
