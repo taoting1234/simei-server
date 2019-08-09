@@ -45,7 +45,7 @@ class ApplicationIdForm(Form):
 
 
 class ApprovalForm(ApplicationIdForm):
-    status = IntegerField(validators=[DataRequired(message='Status cannot be empty')])
+    status = IntegerField()
 
     def validate_status(self, value):
         if self.status.data != 0 and self.status.data != 1:
