@@ -70,3 +70,8 @@ class ModifyPasswordForm(UserIdForm):
             user = get_user_by_user_id(self.user_id.data)
             if not check_password(self.old_password.data, user.password):
                 raise ValidationError('Old password wrong, please check again')
+
+
+class UserInfoForm(UserIdForm):
+    nickname = StringField(validators=[DataRequired(message='Nickname cannot be empty')])
+    permission = IntegerField(validators=[DataRequired(message='Permission cannot be empty')])

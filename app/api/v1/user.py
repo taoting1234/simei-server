@@ -2,8 +2,8 @@ from flask import jsonify
 from flask_login import current_user, login_required, login_user, logout_user
 from app.libs.error_code import AuthFailed, Success, Forbidden
 from app.libs.red_print import RedPrint
-from app.models.user import check_password, get_user_by_user_id, add_user, modify_password, get_user_list
-from app.validators.forms import LoginForm, AddUserForm, ModifyPasswordForm
+from app.models.user import check_password, get_user_by_user_id, add_user, modify_password, get_user_list, modify_user
+from app.validators.forms import LoginForm, AddUserForm, ModifyPasswordForm, UserInfoForm
 
 api = RedPrint('user')
 
@@ -66,3 +66,13 @@ def get_user_list_api():
         'code': 0,
         'data': res
     })
+
+
+@api.route("/modify_user_info", methods=['POST'])
+@login_required
+def modify_user_info_api():
+    if not current_user.permission:
+        raise Forbidden('Only administrators can operate')
+    form = UserInfoForm().validate_for_api()
+    modify_user(form.user_id.data, form.nickname.data, form.permission.data)
+    return Success('Modify successful')

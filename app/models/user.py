@@ -14,10 +14,11 @@ def modify_password(user_id, password):
         user.password = password
 
 
-def modify_user(user_id, nickname):
+def modify_user(user_id, nickname, permission):
     user = get_user_by_user_id(user_id)
     with db.auto_commit():
         user.nickname = nickname
+        user.permission = permission
 
 
 def add_user(user_id, nickname):
