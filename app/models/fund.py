@@ -62,14 +62,14 @@ def approval(application_id, user_id, status):
 
 def get_fund():
     r1 = db.session.query(func.sum(Fund.money)).first()
-    if r1:
+    if r1[0]:
         r1 = int(r1[0])
     else:
         r1 = 0
     r2 = db.session.query(func.sum(Application.money)).filter(
         Application.status == 1
     ).first()
-    if r2:
+    if r2[0]:
         r2 = int(r2[0])
     else:
         r2 = 0
