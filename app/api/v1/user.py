@@ -18,7 +18,7 @@ def login_api():
         raise AuthFailed('User id does not exist')
     if not check_password(user, password):
         raise AuthFailed('Wrong username or password')
-    login_user(user, remember=True)
+    login_user(user)
     return Success('Login successful')
 
 
