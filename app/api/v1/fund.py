@@ -3,7 +3,7 @@ from flask_login import current_user, login_required
 from app.libs.error_code import Forbidden, Success
 from app.libs.red_print import RedPrint
 from app.models.fund import add_fund, apply, get_application_list_by_user_id, approval, get_fund, \
-    get_application_by_application_id, delete_application
+    get_application_by_application_id, delete_application, get_fund_log
 from app.validators.forms import MoneyForm, ApplyForm, UserIdForm, ApprovalForm, ApplicationIdForm
 
 api = RedPrint('fund')
@@ -58,6 +58,18 @@ def admin_get_apply_list_api():
     if not current_user.permission:
         raise Forbidden('Only administrators can operate')
     res = get_application_list_by_user_id()
+    return jsonify({
+        'code': 0,
+        'data': res
+    })
+
+
+@api.route('/get_fund_log', methods=['POST'])
+@login_required
+def get_fund_log_api():
+    if not current_user.permission:
+        raise Forbidden('Only administrators can operate')
+    res = get_fund_log()
     return jsonify({
         'code': 0,
         'data': res

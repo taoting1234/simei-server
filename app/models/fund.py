@@ -80,3 +80,13 @@ def get_fund():
 def delete_application(application_id):
     with db.auto_commit():
         Application.query.filter_by(id=application_id).delete()
+
+
+def get_fund_log():
+    r = Fund.query.order_by(desc(Fund.id)).all()
+    return [{
+        'id': i.id,
+        'money': i.money,
+        'user_id': i.user_id,
+        'create_time': i.create_time
+    } for i in r]
