@@ -90,9 +90,7 @@ class Base(db.Model):
                 if key == "start_date":
                     res = res.filter(getattr(cls, "create_time") >= value)
                 if key == "end_date":
-                    res = res.filter(
-                        getattr(cls, "create_time") < value + datetime.timedelta(days=1)
-                    )
+                    res = res.filter(getattr(cls, "create_time") < value + datetime.timedelta(days=1))
 
         res = res.order_by(desc(getattr(cls, "id")))
         page = kwargs.get("page") if kwargs.get("page") else 1

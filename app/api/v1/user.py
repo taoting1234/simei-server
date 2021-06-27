@@ -41,11 +41,7 @@ def modify_user_api(id_):
     if current_user.id != user.id and current_user.permission == 0:
         raise Forbidden()
     form = UserForm().validate_for_api().data_
-    if (
-        current_user.permission == 0
-        and form["password"]
-        and user.check_password(form["old_password"]) is False
-    ):
+    if current_user.permission == 0 and form["password"] and user.check_password(form["old_password"]) is False:
         raise ParameterException("Old password wrong")
     if form["permission"] and current_user.permission == 0:
         raise Forbidden()

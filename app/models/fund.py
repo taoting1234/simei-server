@@ -21,9 +21,5 @@ class Fund(Base):
         from app.models.application import Application
 
         all_money = int(db.session.query(func.sum(Fund.money)).first()[0])
-        used_money = int(
-            db.session.query(func.sum(Application.money))
-            .filter(Application.status == 1)
-            .first()[0]
-        )
+        used_money = int(db.session.query(func.sum(Application.money)).filter(Application.status == 1).first()[0])
         return all_money - used_money

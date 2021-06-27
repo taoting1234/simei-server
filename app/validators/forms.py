@@ -23,9 +23,7 @@ class SearchForm(Form):
 
 class LoginForm(Form):
     id = StringField(validators=[DataRequired(message="User id cannot be empty")])
-    password = StringField(
-        validators=[DataRequired(message="Password cannot be empty")]
-    )
+    password = StringField(validators=[DataRequired(message="Password cannot be empty")])
 
 
 class MoneyForm(Form):
@@ -55,9 +53,7 @@ class SearchApplicationForm(SearchForm):
 
 class CreateUserForm(Form):
     id = StringField(validators=[DataRequired(message="User id cannot be empty")])
-    nickname = StringField(
-        validators=[DataRequired(message="Nickname cannot be empty")]
-    )
+    nickname = StringField(validators=[DataRequired(message="Nickname cannot be empty")])
 
 
 class UserForm(Form):
@@ -76,9 +72,7 @@ class SearchCustomerForm(SearchForm):
 
 
 class CreateCustomerForm(Form):
-    name = StringField(
-        validators=[DataRequired(message="Customer name cannot be empty")]
-    )
+    name = StringField(validators=[DataRequired(message="Customer name cannot be empty")])
     phone = StringField()
     address = StringField()
     principal_user_id = StringField()
