@@ -6,11 +6,7 @@ from flask_login import current_user, login_required
 from app.libs.error_code import Forbidden, NotFound, Success
 from app.libs.red_print import RedPrint
 from app.models.application import Application
-from app.validators.forms import (
-    ApplicationForm,
-    CreateApplicationForm,
-    SearchApplicationForm,
-)
+from app.validators.forms import ApplicationForm, CreateApplicationForm, SearchApplicationForm
 
 api = RedPrint("application")
 

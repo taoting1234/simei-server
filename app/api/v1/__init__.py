@@ -1,14 +1,6 @@
 from flask import Blueprint
 
-from app.api.v1 import (
-    application,
-    collection_money,
-    customer,
-    file,
-    fund,
-    session,
-    user,
-)
+from app.api.v1 import application, collection_money, customer, file, fund, session, user
 
 
 def create_blueprint_v1():

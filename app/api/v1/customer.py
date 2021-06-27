@@ -5,11 +5,7 @@ from app.libs.error_code import Forbidden, NotFound, ParameterException, Success
 from app.libs.red_print import RedPrint
 from app.models.customer import Customer
 from app.models.user import User
-from app.validators.forms import (
-    CreateCustomerForm,
-    ModifyCustomerForm,
-    SearchCustomerForm,
-)
+from app.validators.forms import CreateCustomerForm, ModifyCustomerForm, SearchCustomerForm
 
 api = RedPrint("customer")
 
