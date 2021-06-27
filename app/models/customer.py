@@ -6,9 +6,18 @@ from app.models.user import User
 
 
 class Customer(Base):
-    __tablename__ = 'customer'
+    __tablename__ = "customer"
 
-    fields = ['id', 'name', 'phone', 'address', 'principal_user_id', 'principal_user', 'status', 'create_time']
+    fields = [
+        "id",
+        "name",
+        "phone",
+        "address",
+        "principal_user_id",
+        "principal_user",
+        "status",
+        "create_time",
+    ]
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(100), nullable=False)

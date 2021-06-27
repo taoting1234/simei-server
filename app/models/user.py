@@ -7,9 +7,9 @@ from app.models.base import Base
 
 
 class User(UserMixin, Base):
-    __tablename__ = 'user'
+    __tablename__ = "user"
 
-    fields = ['id', 'nickname', 'permission']
+    fields = ["id", "nickname", "permission"]
 
     id = Column(String(100), primary_key=True)
     password = Column(String(100), nullable=False)

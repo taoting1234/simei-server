@@ -1,10 +1,18 @@
 from flask import Blueprint
 
-from app.api.v1 import application, customer, fund, session, user, file, collection_money
+from app.api.v1 import (
+    application,
+    collection_money,
+    customer,
+    file,
+    fund,
+    session,
+    user,
+)
 
 
 def create_blueprint_v1():
-    bp_v1 = Blueprint('v1', __name__)
+    bp_v1 = Blueprint("v1", __name__)
 
     session.api.register(bp_v1)
     user.api.register(bp_v1)

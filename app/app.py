@@ -8,12 +8,12 @@ from app.libs.error_code import ServerError
 
 class JSONEncoder(_JSONEncoder):
     def default(self, o):
-        if hasattr(o, 'keys') and hasattr(o, '__getitem__'):
+        if hasattr(o, "keys") and hasattr(o, "__getitem__"):
             return dict(o)
         if isinstance(o, datetime):
-            return o.strftime('%Y-%m-%d %H:%M:%S')
+            return o.strftime("%Y-%m-%d %H:%M:%S")
         if isinstance(o, date):
-            return o.strftime('%Y-%m-%d')
+            return o.strftime("%Y-%m-%d")
         raise ServerError()
 
 

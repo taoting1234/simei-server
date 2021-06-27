@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
 from app.models.base import Base
@@ -7,9 +7,19 @@ from app.models.user import User
 
 
 class CollectionMoney(Base):
-    __tablename__ = 'collection_money'
+    __tablename__ = "collection_money"
 
-    fields = ['id', 'user_id', 'user', 'name', 'money', 'remark', 'customer_id', 'customer', 'create_time']
+    fields = [
+        "id",
+        "user_id",
+        "user",
+        "name",
+        "money",
+        "remark",
+        "customer_id",
+        "customer",
+        "create_time",
+    ]
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     user_id = Column(String(100), ForeignKey(User.id))

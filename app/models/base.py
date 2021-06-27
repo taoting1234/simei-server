@@ -55,11 +55,11 @@ class Base(db.Model):
                             setattr(base, key, value)
                         except:
                             pass
-            if hasattr(cls, 'create_time'):
-                if kwargs.get('create_time'):
-                    setattr(base, 'create_time', kwargs['create_time'])
+            if hasattr(cls, "create_time"):
+                if kwargs.get("create_time"):
+                    setattr(base, "create_time", kwargs["create_time"])
                 else:
-                    setattr(base, 'create_time', datetime.datetime.now())
+                    setattr(base, "create_time", datetime.datetime.now())
             db.session.add(base)
         return base
 
@@ -87,23 +87,19 @@ class Base(db.Model):
                         res = res.filter(getattr(cls, key).like(value))
                     else:
                         res = res.filter(getattr(cls, key) == value)
-                if key == 'start_date':
-                    res = res.filter(getattr(cls, 'create_time') >= value)
-                if key == 'end_date':
-                    res = res.filter(getattr(cls, 'create_time') < value + datetime.timedelta(days=1))
+                if key == "start_date":
+                    res = res.filter(getattr(cls, "create_time") >= value)
+                if key == "end_date":
+                    res = res.filter(
+                        getattr(cls, "create_time") < value + datetime.timedelta(days=1)
+                    )
 
-        res = res.order_by(desc(getattr(cls, 'id')))
-        page = kwargs.get('page') if kwargs.get('page') else 1
-        page_size = kwargs.get('page_size') if kwargs.get('page_size') else 20
-        data = {
-            'meta': {
-                'count': res.count(),
-                'page': page,
-                'page_size': page_size
-            }
-        }
+        res = res.order_by(desc(getattr(cls, "id")))
+        page = kwargs.get("page") if kwargs.get("page") else 1
+        page_size = kwargs.get("page_size") if kwargs.get("page_size") else 20
+        data = {"meta": {"count": res.count(), "page": page, "page_size": page_size}}
 
         res = res.offset((page - 1) * page_size).limit(page_size)
         res = res.all()
-        data['data'] = res
+        data["data"] = res
         return data

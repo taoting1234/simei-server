@@ -6,12 +6,21 @@ from app.models.user import User
 
 
 class Application(Base):
-    __tablename__ = 'application'
+    __tablename__ = "application"
 
-    fields = ['id', 'name', 'money', 'remark',
-              'apply_user_id', 'apply_user', 'apply_time',
-              'approval_user_id', 'approval_user', 'approval_time',
-              'status']
+    fields = [
+        "id",
+        "name",
+        "money",
+        "remark",
+        "apply_user_id",
+        "apply_user",
+        "apply_time",
+        "approval_user_id",
+        "approval_user",
+        "approval_time",
+        "status",
+    ]
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(100), nullable=False)
