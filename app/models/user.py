@@ -1,58 +1,30 @@
+from flask_login import UserMixin
+from sqlalchemy import Column, Integer, String
+
 from app import login_manager
 from app.libs.error_code import AuthFailed
-from app.models.base import db
-from app.models.entity import User
+from app.models.base import Base
 
 
-def check_password(no_auth_password, auth_password):
-    return no_auth_password == auth_password
+class User(UserMixin, Base):
+    __tablename__ = 'user'
 
+    fields = ['id', 'nickname', 'permission']
 
-def modify_password(user_id, password):
-    user = get_user_by_user_id(user_id)
-    with db.auto_commit():
-        user.password = password
+    id = Column(String(100), primary_key=True)
+    password = Column(String(100), nullable=False)
+    nickname = Column(String(100), nullable=False)
+    permission = Column(Integer, default=0)
 
+    def check_password(self, password):
+        return self.password == password
 
-def modify_user(user_id, nickname, permission):
-    user = get_user_by_user_id(user_id)
-    with db.auto_commit():
-        user.nickname = nickname
-        user.permission = permission
+    @staticmethod
+    @login_manager.user_loader
+    def load_user(id_):
+        return User.get_by_id(id_)
 
-
-def add_user(user_id, nickname):
-    with db.auto_commit():
-        user = User()
-        user.id = user_id
-        user.nickname = nickname
-        user.password = user_id
-        user.permission = 0
-        db.session.add(user)
-
-
-def get_user_list():
-    return [{
-        'user_id': i.id,
-        'nickname': i.nickname,
-        'permission': i.permission
-    } for i in User.query.all()]
-
-
-@login_manager.user_loader
-def get_user_by_user_id(user_id):
-    return User.query.get(user_id)
-
-
-@login_manager.unauthorized_handler
-def unauthorized_handler():
-    return AuthFailed()
-
-
-if __name__ == '__main__':
-    from app import create_app
-
-    with create_app().app_context():
-        r = get_user_by_username('31702411')
-        print(r)
-        print(r.oj_username[0].oj_username)
+    @staticmethod
+    @login_manager.unauthorized_handler
+    def unauthorized_handler():
+        return AuthFailed()

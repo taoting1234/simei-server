@@ -1,15 +1,28 @@
-from flask_login import current_user
-from wtforms import StringField, IntegerField
+from wtforms import IntegerField, StringField
 from wtforms.validators import DataRequired, ValidationError
 
-from app.libs.error_code import Forbidden
-from app.models.fund import get_application_by_application_id
-from app.models.user import get_user_by_user_id, check_password
 from app.validators.base import BaseForm as Form
 
 
+class SearchForm(Form):
+    page = IntegerField()
+    page_size = IntegerField()
+
+    def validate_page(self, value):
+        if self.page.data:
+            self.page.data = int(self.page.data)
+            if self.page.data <= 0:
+                raise ValidationError('Page must >= 1')
+
+    def validate_page_size(self, value):
+        if self.page_size.data:
+            self.page_size.data = int(self.page_size.data)
+            if self.page_size.data > 100:
+                raise ValidationError('Page size must <= 100')
+
+
 class LoginForm(Form):
-    user_id = StringField(validators=[DataRequired(message='User id cannot be empty')])
+    id = StringField(validators=[DataRequired(message='User id cannot be empty')])
     password = StringField(validators=[DataRequired(message='Password cannot be empty')])
 
 
@@ -21,30 +34,12 @@ class MoneyForm(Form):
             raise ValidationError('Money must be > 0')
 
 
-class ApplyForm(MoneyForm):
+class CreateApplicationForm(MoneyForm):
     name = StringField(validators=[DataRequired(message='Name cannot be empty')])
     remark = StringField(validators=[DataRequired(message='Remark cannot be empty')])
 
 
-class UserIdForm(Form):
-    user_id = StringField(validators=[DataRequired(message='User id cannot be empty')])
-
-    def validate_user_id(self, value):
-        if not current_user.permission and current_user.id != self.user_id.data:
-            raise Forbidden()
-        if not get_user_by_user_id(self.user_id.data):
-            raise ValidationError('User does not exist')
-
-
-class ApplicationIdForm(Form):
-    application_id = IntegerField(validators=[DataRequired(message='Application id cannot be empty')])
-
-    def validate_application_id(self, value):
-        if not get_application_by_application_id(self.application_id.data):
-            raise ValidationError('Application does not exist')
-
-
-class ApprovalForm(ApplicationIdForm):
+class ApplicationForm(Form):
     status = IntegerField()
 
     def validate_status(self, value):
@@ -52,26 +47,40 @@ class ApprovalForm(ApplicationIdForm):
             raise ValidationError('Status must be 0 or 1')
 
 
-class AddUserForm(Form):
-    user_id = StringField(validators=[DataRequired(message='User id cannot be empty')])
+class SearchApplicationForm(SearchForm):
+    apply_user_id = StringField()
+
+
+class CreateUserForm(Form):
+    id = StringField(validators=[DataRequired(message='User id cannot be empty')])
     nickname = StringField(validators=[DataRequired(message='Nickname cannot be empty')])
 
-    def validate_user_id(self, value):
-        if get_user_by_user_id(self.user_id.data):
-            raise ValidationError('User already exist')
 
-
-class ModifyPasswordForm(UserIdForm):
+class UserForm(Form):
+    nickname = StringField()
     old_password = StringField()
-    new_password = StringField(validators=[DataRequired(message='New password cannot be empty')])
-
-    def validate_old_password(self, value):
-        if not current_user.permission:
-            user = get_user_by_user_id(self.user_id.data)
-            if not check_password(self.old_password.data, user.password):
-                raise ValidationError('Old password wrong, please check again')
+    password = StringField()
+    permission = IntegerField()
 
 
-class UserInfoForm(UserIdForm):
-    nickname = StringField(validators=[DataRequired(message='Nickname cannot be empty')])
-    permission = IntegerField(validators=[DataRequired(message='Permission cannot be empty')])
+class SearchCustomerForm(SearchForm):
+    name = StringField()
+    phone = StringField()
+    address = StringField()
+    principal_user_id = StringField()
+    status = IntegerField()
+
+
+class CreateCustomerForm(Form):
+    name = StringField(validators=[DataRequired(message='Customer name cannot be empty')])
+    phone = StringField()
+    address = StringField()
+    principal_user_id = StringField()
+
+
+class ModifyCustomerForm(Form):
+    name = StringField()
+    phone = StringField()
+    address = StringField()
+    principal_user_id = StringField()
+    status = IntegerField()

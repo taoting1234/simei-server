@@ -1,7 +1,7 @@
 Flask
-Flask-Cors
 Flask-Login
 Flask-SQLAlchemy
+Flask-cors
 PyMySQL
 WTForms
-gunicorn
+oss2

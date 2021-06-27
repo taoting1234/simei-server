@@ -1,92 +1,24 @@
-import datetime
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, func
+from sqlalchemy.orm import relationship
 
-from sqlalchemy import desc, func
-
-from app.models.base import db
-from app.models.entity import Fund, Application
-
-
-def add_fund(user_id, money):
-    with db.auto_commit():
-        r = Fund()
-        r.user_id = user_id
-        r.money = money
-        r.create_time = datetime.datetime.now()
-        db.session.add(r)
+from app.models.base import Base, db
+from app.models.user import User
 
 
-def apply(user_id, name, money, remark):
-    with db.auto_commit():
-        r = Application()
-        r.apply_user_id = user_id
-        r.name = name
-        r.money = money
-        r.remark = remark
-        r.apply_time = datetime.datetime.now()
-        r.status = 0
-        db.session.add(r)
+class Fund(Base):
+    __tablename__ = 'fund'
 
+    fields = ['id', 'money', 'user_id', 'user', 'create_time']
 
-def get_application_list_by_user_id(user_id=None):
-    if user_id:
-        r = Application.query.filter_by(apply_user_id=user_id).order_by(desc(Application.id)).all()
-    else:
-        r = Application.query.order_by(desc(Application.id)).all()
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    money = Column(Integer, nullable=False)
+    user_id = Column(String(100), ForeignKey(User.id))
+    user = relationship(User, foreign_keys=[user_id])
+    create_time = Column(DateTime, nullable=False)
 
-    return [{
-        'id': i.id,
-        'name': i.name,
-        'money': i.money,
-        'remark': i.remark,
-        'apply_user_id': i.apply_user_id,
-        'apply_user_nickname': i.apply_user.nickname,
-        'apply_time': i.apply_time,
-        'approval_user_id': i.approval_user_id,
-        'approval_user_nickname': i.approval_user.nickname if i.approval_user else None,
-        'approval_time': i.approval_time,
-        'status': i.status
-    } for i in r]
-
-
-def get_application_by_application_id(application_id):
-    return Application.query.get(application_id)
-
-
-def approval(application_id, user_id, status):
-    r = get_application_by_application_id(application_id)
-    with db.auto_commit():
-        r.approval_user_id = user_id
-        r.approval_time = datetime.datetime.now()
-        r.status = status
-
-
-def get_fund():
-    r1 = db.session.query(func.sum(Fund.money)).first()
-    if r1[0]:
-        r1 = int(r1[0])
-    else:
-        r1 = 0
-    r2 = db.session.query(func.sum(Application.money)).filter(
-        Application.status == 1
-    ).first()
-    if r2[0]:
-        r2 = int(r2[0])
-    else:
-        r2 = 0
-
-    return r1 - r2
-
-
-def delete_application(application_id):
-    with db.auto_commit():
-        Application.query.filter_by(id=application_id).delete()
-
-
-def get_fund_log():
-    r = Fund.query.order_by(desc(Fund.id)).all()
-    return [{
-        'id': i.id,
-        'money': i.money,
-        'user_id': i.user_id,
-        'create_time': i.create_time
-    } for i in r]
+    @staticmethod
+    def get_current_money():
+        from app.models.application import Application
+        all_money = int(db.session.query(func.sum(Fund.money)).first()[0])
+        used_money = int(db.session.query(func.sum(Application.money)).filter(Application.status == 1).first()[0])
+        return all_money - used_money
